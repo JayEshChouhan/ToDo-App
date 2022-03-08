@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<head>
+  <title>Todo App</title>
+  <link rel="stylesheet" href="/public/stylesheets/style.css" type="text/css" />
+  <link
+    href="https://fonts.googleapis.com/css?family=Baloo+Bhai|Candal|Chewy&display=swap"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay"
+    crossorigin="anonymous"
+  />
+</head>
+<body>
+  <div class="todo-container">
+    <h2>To-Do List</h2>
+    <div class="todo">
+      <form action="http://localhost:3000/" method="POST" class="todo-header">
+        <input type="text" name="name" class="input" />
+        <input type="text" name="time" class="input" />
+        <button type="submit" class="add">
+          <span class="fas fa-plus"></span>
+        </button>
+      </form>
+      <ul class="todo-list moveable" id="items-list">
+
+      </ul>
+    </div>
+  </div>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    function createUpdateBox(newItem, id) {
+      var ul = document.querySelector("ul");
+      var li = document.createElement("li");
+      var attr = document.createAttribute("draggable");
+      var form = document.createElement("form");
+      var form_attr1 = document.createAttribute("action");
+      var form_attr2 = document.createAttribute("method");
+      var input = document.createElement("input");
+      var input_attr1 = document.createAttribute("type");
+      var input_attr2 = document.createAttribute("value");
+      var input_attr3 = document.createAttribute("name");
+      var button = document.createElement("button");
+      var button_attr = document.createAttribute("type");
+      button_attr.value = "submit";
+      button.setAttributeNode(button_attr);
+      button.appendChild(document.createTextNode("Confirm"));
+      input_attr1.value = "text";
+      input_attr2.value = `${newItem}`;
+      input_attr3.value = "name";
+      input.setAttributeNode(input_attr1);
+      input.setAttributeNode(input_attr2);
+      input.setAttributeNode(input_attr3);
+      form_attr1.value = `/edit/${id}`;
+      form_attr2.value = "POST";
+      form.setAttributeNode(form_attr1);
+      form.setAttributeNode(form_attr2);
+      form.appendChild(input);
+      form.appendChild(button);
+      li.appendChild(form);
+      ul.appendChild(li);
+    }
+    function createBox(newItem, id) {
+      var ul = document.querySelector("ul");
+      var li = document.createElement("li");
+      var attr = document.createAttribute("draggable");
+      var a1_attr = document.createAttribute("data-id");
+      // var a1_attr1 = document.createAttribute('onclick');
+      var a2_attr = document.createAttribute("href");
+      var div = document.createElement("div");
+      var div2 = document.createElement("div");
+      var a1 = document.createElement("a");
+      var a2 = document.createElement("a");
+      var a1_span = document.createElement("span");
+      var a2_span = document.createElement("span");
+      var form = document.createElement("form");
+      var form_attr1 = document.createAttribute("action");
+      var form_attr2 = document.createAttribute("method");
+      var input = document.createElement("input");
+      var input_attr1 = document.createAttribute("type");
+      var input_attr2 = document.createAttribute("value");
+      var input_attr3 = document.createAttribute("name");
+      var button = document.createElement("button");
+      var button_attr = document.createAttribute("type");
+      button_attr.value = "submit";
+      button.setAttributeNode(button_attr);
+      button.appendChild(document.createTextNode("Confirm"));
+      input_attr1.value = "text";
+      input_attr2.value = `${newItem}`;
+      input_attr3.value = "name";
+      input.setAttributeNode(input_attr1);
+      input.setAttributeNode(input_attr2);
+      input.setAttributeNode(input_attr3);
+      form_attr1.value = `/edit/${id}`;
+      form_attr2.value = "POST";
+      form.setAttributeNode(form_attr1);
+      form.setAttribute("id", "form" + id);
+      form.setAttributeNode(form_attr2);
+      form.appendChild(input);
+      form.appendChild(button);
+      li.appendChild(form);
+      li.className = "todo-list-item";
+      div.className = "todo-list-item-name";
+      a1.className = "edit";
+      a1.setAttribute("id", "toggle");
+      a1_span.className = "fas fa-edit";
+      a2.className = "remove";
+      a2_span.className = "fas fa-times";
+      attr.value = "true";
+      a1_attr.value = `${id}`;
+      // a1_attr1.value = `createFrom();`;
+      a2_attr.value = `/delete/${id}`;
+      li.setAttributeNode(attr);
+      a1.setAttributeNode(a1_attr);
+      // a1.setAttributeNode(a1_attr1);
+      a2.setAttributeNode(a2_attr);
+      a1.appendChild(a1_span);
+      a2.appendChild(a2_span);
+      div.appendChild(document.createTextNode(newItem));
+      div2.appendChild(div);
+      div2.appendChild(a1);
+      div2.appendChild(a2);
+      li.appendChild(div2);
+      ul.appendChild(li);
+    }
+    var requestOptions = {
+      method: "GET",
+      redirect: "follow",
+    };
+    fetch("http://localhost:3000/getdata", requestOptions)
+      .then((response) => response.text())
+      .then((result) => {
+        let listeDatas = JSON.parse(result);
+        console.log(typeof listeDatas);
+        let id = localStorage.getItem("item");
+        console.log(id);
+        for (var list in listeDatas) {
+          createBox(listeDatas[list].name, listeDatas[list]._id);
+        }
+      })
+      .catch((error) => console.log("error", error));
+
+    var btn = document.querySelector(".add");
+    var remove = document.querySelector(".todo-list-item");
+    function dragStart(e) {
+      this.style.opacity = "0.4";
+      dragSrcEl = this;
+      e.dataTransfer.effectAllowed = "move";
+      e.dataTransfer.setData("text/html", this.innerHTML);
+    }
+    function dragEnter(e) {
+      this.classList.add("over");
+    }
+
+    function dragLeave(e) {
+      e.stopPropagation();
+      this.classList.remove("over");
+    }
+
+    function dragOver(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+      return false;
+    }
+
+    function dragDrop(e) {
+      if (dragSrcEl != this) {
+        dragSrcEl.innerHTML = this.innerHTML;
+        this.innerHTML = e.dataTransfer.getData("text/html");
+      }
+      return false;
+    }
+
+    function dragEnd(e) {
+      var listItens = document.querySelectorAll(".todo-list-item");
+      [].forEach.call(listItens, function (item) {
+        item.classList.remove("over");
+      });
+      this.style.opacity = "1";
+    }
+
+    function addEventsDragAndDrop(el) {
+      el.addEventListener("dragstart", dragStart, false);
+      el.addEventListener("dragenter", dragEnter, false);
+      el.addEventListener("dragover", dragOver, false);
+      el.addEventListener("dragleave", dragLeave, false);
+      el.addEventListener("drop", dragDrop, false);
+      el.addEventListener("dragend", dragEnd, false);
+    }
+
+    var listItens = document.querySelectorAll(".todo-list-item");
+    [].forEach.call(listItens, function (item) {
+      addEventsDragAndDrop(item);
+    });
+  </script>
+  <script>
+    
+    $(document).on("click", function (event) {
+        console.log(event.target.parentNode.getAttribute('data-id'))
+        element_id = event.target.parentNode.getAttribute('data-id')
+        element = event.target.parentNode
+      $("#form"+element_id).show();
+      if(element_id){
+        $(element.parentNode).hide();
+      }
+      
+    });
+  </script>
+</body>
