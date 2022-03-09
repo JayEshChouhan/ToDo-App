@@ -18,8 +18,8 @@
     <h2>To-Do List</h2>
     <div class="todo">
       <form action="http://localhost:3000/" method="POST" class="todo-header">
-        <input type="text" name="name" class="input" />
-        <input type="text" name="time" class="input" />
+        <input type="text" name="name" class="input" required/>
+        <input type="time" name="time" class="input" required/>
         <button type="submit" class="add">
           <span class="fas fa-plus"></span>
         </button>
@@ -31,37 +31,6 @@
   </div>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script>
-    function createUpdateBox(newItem, id) {
-      var ul = document.querySelector("ul");
-      var li = document.createElement("li");
-      var attr = document.createAttribute("draggable");
-      var form = document.createElement("form");
-      var form_attr1 = document.createAttribute("action");
-      var form_attr2 = document.createAttribute("method");
-      var input = document.createElement("input");
-      var input_attr1 = document.createAttribute("type");
-      var input_attr2 = document.createAttribute("value");
-      var input_attr3 = document.createAttribute("name");
-      var button = document.createElement("button");
-      var button_attr = document.createAttribute("type");
-      button_attr.value = "submit";
-      button.setAttributeNode(button_attr);
-      button.appendChild(document.createTextNode("Confirm"));
-      input_attr1.value = "text";
-      input_attr2.value = `${newItem}`;
-      input_attr3.value = "name";
-      input.setAttributeNode(input_attr1);
-      input.setAttributeNode(input_attr2);
-      input.setAttributeNode(input_attr3);
-      form_attr1.value = `/edit/${id}`;
-      form_attr2.value = "POST";
-      form.setAttributeNode(form_attr1);
-      form.setAttributeNode(form_attr2);
-      form.appendChild(input);
-      form.appendChild(button);
-      li.appendChild(form);
-      ul.appendChild(li);
-    }
     function createBox(newItem, id) {
       var ul = document.querySelector("ul");
       var li = document.createElement("li");
@@ -83,10 +52,14 @@
       var input_attr2 = document.createAttribute("value");
       var input_attr3 = document.createAttribute("name");
       var button = document.createElement("button");
+      var button_c = document.createElement("a");
       var button_attr = document.createAttribute("type");
       button_attr.value = "submit";
+      button_c.setAttribute("href", "/");
+      button_c.classList = "cancel";
       button.setAttributeNode(button_attr);
       button.appendChild(document.createTextNode("Confirm"));
+      button_c.appendChild(document.createTextNode("cancel"));
       input_attr1.value = "text";
       input_attr2.value = `${newItem}`;
       input_attr3.value = "name";
@@ -100,6 +73,7 @@
       form.setAttributeNode(form_attr2);
       form.appendChild(input);
       form.appendChild(button);
+      form.appendChild(button_c);
       li.appendChild(form);
       li.className = "todo-list-item";
       div.className = "todo-list-item-name";
@@ -207,5 +181,15 @@
       }
       
     });
+    // $(document).on("click", function (event) {
+    //     console.log(event.target.parentNode.getAttribute('data-id'))
+    //     element_id = event.target.parentNode.getAttribute('data-id')
+    //     element = event.target.parentNode
+    //   $("#form"+element_id).show();
+    //   if(element_id){
+    //     $(element.parentNode).hide();
+    //   }
+      
+    // });
   </script>
 </body>

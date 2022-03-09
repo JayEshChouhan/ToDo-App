@@ -25,33 +25,23 @@ return mongoose;
 }
 
 
-
-
-
-
-
 app.use("/public" , express.static("public"));
 app.use(express.urlencoded({extended: false}));
 
 app.set("view engine", "ejs");
 var db = connect();
 const taskSchema = new mongoose.Schema({ name: 'string', time: 'string'});
+const Task = db.model('todos', taskSchema);
 
 app.get('/',async (req, res) => {
-    const Task = db.model('todos', taskSchema);
     res.render("todo.ejs");
 });
 
 app.get('/getdata',async (req, res) => {
-
-    const Task = db.model('todos', taskSchema);
     const d=await Task.find({});
     res.json(d);
 });
 app.post('/',(req, res) => {
-    const Task = db.model('todos', taskSchema);
-    console.log(req.body);
-    console.log(req.params.id);
     Task.create(req.body , err =>{
         if (!err) {
             res.redirect('/');
@@ -60,8 +50,7 @@ app.post('/',(req, res) => {
         }
     });
 });
-app.get('/delete/(:id)', function(req, res, next) {
-    const Task = db.model('todos', taskSchema);
+app.get('/delete/(:id)', (req, res) => {
     Task.findByIdAndRemove(req.params.id, (err, doc) => {
         if (!err) {
             res.redirect('/');
@@ -70,9 +59,19 @@ app.get('/delete/(:id)', function(req, res, next) {
         }
     });
 })
-app.post('/edit/(:id)', function(req, res) {
+
+
+app.delete('/delete/', function (req, res) {
+   console.log(req.body);
+//    connection.query('DELETE FROM `employee` WHERE `id`=?', [req.body.id], function (error, results, fields) {
+// 	  if (error) throw error;
+// 	  res.end('Record has been deleted!');
+// 	});
+});
+
+
+app.post('/edit/(:id)', (req, res) => {
     console.log(req.body);
-    const Task = db.model('todos', taskSchema);
     Task.findByIdAndUpdate(req.params.id,{ $set: req.body }, (err, doc) => {
         if (!err) {
             res.redirect('/');
