@@ -170,7 +170,6 @@
     });
   </script>
   <script>
-    
     $(document).on("click", function (event) {
         console.log(event.target.parentNode.getAttribute('data-id'))
         element_id = event.target.parentNode.getAttribute('data-id')
@@ -179,17 +178,6 @@
       if(element_id){
         $(element.parentNode).hide();
       }
-      
     });
-    // $(document).on("click", function (event) {
-    //     console.log(event.target.parentNode.getAttribute('data-id'))
-    //     element_id = event.target.parentNode.getAttribute('data-id')
-    //     element = event.target.parentNode
-    //   $("#form"+element_id).show();
-    //   if(element_id){
-    //     $(element.parentNode).hide();
-    //   }
-      
-    // });
   </script>
 </body>
